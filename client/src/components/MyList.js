@@ -6,6 +6,7 @@ export const MyList = () => {
     <div>
       <h1>
         MyList
-        </h1></div>
+        </h1>
+        </div>
   )
 }

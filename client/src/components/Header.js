@@ -11,12 +11,18 @@ export const Header = () => {
           </div>
 
           <ul className="nav-links">
-            <li>
-              <Link to="/my-list">My List</Link>
+          <li>
+              <Link to="/login">Login</Link>
             </li>
             <li>
-              <Link to="/add" className="btn btn-main">
-                Add Movie
+              <Link to="/my-list">Katalogue</Link>
+            </li>
+            <li>
+              <Link to="/forum">Forums</Link>
+            </li>
+            <li>
+              <Link to="/search" className="btn btn-main">
+                Search
               </Link>
             </li>
           </ul>
