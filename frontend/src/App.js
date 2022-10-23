@@ -10,13 +10,14 @@ import {Search} from "./components/Search";
 import {MediaPage} from "./components/MediaPage";
 import Home from './components/Home';
 import './lib/font-awesome/css/all.min.css';
+import { Header } from './components/Header';
 
 
 
 function App() {
   return (
   <BrowserRouter>
-  <NavBar />
+  <Header />
     <Routes>
       <Route path="/" element={<LandingPage></LandingPage>}></Route>
       <Route path="/home" element={<Home />}></Route>

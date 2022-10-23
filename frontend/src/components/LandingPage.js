@@ -43,14 +43,6 @@ export default function Album() {
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <AppBar position="relative">
-                <Toolbar>
-                    <CameraIcon sx={{ mr: 2 }} />
-                    <Typography variant="h6" color="inherit" noWrap>
-                        Album layout
-                    </Typography>
-                </Toolbar>
-            </AppBar>
             <main>
                 {/* Hero unit */}
                 <Box
