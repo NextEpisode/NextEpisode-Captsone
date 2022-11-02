@@ -1,9 +1,18 @@
 import React from 'react'
 import { Link } from "react-router-dom";
 
-export const MediaCard = ({ media }) => {
+export const MediaCard = ({ media,type }) => {
+    // let mediaCardName;
+
+    // if(type == 'search'){
+    //     mediaCardName = 'media-card';
+    // }
+    // else{
+    //     mediaCardName = 'media-card-carousel';
+    // }
+
   return (
-    <div className="media-card">
+    <div className='media-card'>
         
         <Link to="/media-page">
         <div className="poster-wrapper">

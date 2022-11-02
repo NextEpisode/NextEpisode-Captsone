@@ -6,8 +6,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { CardMedia } from '@mui/material';
-
+import { CardMedia, IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 
 
 
@@ -63,6 +63,7 @@ function MovieTable({medias}){
 }
 
 function SeriesTable({medias}){
+    let episodes = 0;
     return(
         <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -94,12 +95,16 @@ function SeriesTable({medias}){
               </TableCell>
               <TableCell align="right">{media.title}</TableCell>
               <TableCell align="right">{media.release_date}</TableCell>
-
-              <TableCell align="right">{media.name}</TableCell>
+              <TableCell align="right">{media.episode}<IconButton color="primary" onClick={addToEpisodes(episodes)}><AddIcon fontSize="small" /> 
+      </IconButton></TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
     );
+}
+
+function addToEpisodes(episodes){
+    episodes++;
 }
