@@ -2,10 +2,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&family=Ubuntu&display=swap');
 
 :root {
-  --primary: #5F506B;
-  --secondary: #533747;
-  --tertiary: #6A6B83;
-  --contrast: #76949F;
+  --primary: #1976D2;
+  --secondary: #ffffff;
+  --tertiary: #8ef0eb;
+  --contrast: #3e829b;
   
 }
 
@@ -273,4 +273,29 @@ header .nav-links li:last-child {
   color: #333333;
   font-size: 3rem;
   text-align: center;
+}
+
+.media-format span {
+  text-transform: capitalize;
+}
+
+.media-page p.media-memory {
+  width: 100%;
+  background-color: var(--primary);
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  color: var(--white);
+  font-size: 1.25rem;
+}
+
+.media-page .poster-wrapper img,
+.filler-poster {
+  width: 200px;
+  height: 250px;
+  background-color: var(--contrast);
+  border-radius: 5px;
+  margin-right: 15px;
+  display: block;
+  color: transparent;
 }
