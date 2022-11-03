@@ -1,23 +1,14 @@
 import React from 'react'
 import { Link } from "react-router-dom";
 
-export const MediaCard = ({ media,type }) => {
-    // let mediaCardName;
-
-    // if(type == 'search'){
-    //     mediaCardName = 'media-card';
-    // }
-    // else{
-    //     mediaCardName = 'media-card-carousel';
-    // }
-
+export const MediaCard = ({ media }) => {
   return (
-    <div className='media-card'>
-        
-        <Link to="/media-page">
+    <div className="media-card">
+       
+        <Link to={`/media-page/${media.id}?type=${type ? "movie" : "tv"}`}>
         <div className="poster-wrapper">
             {media.poster_path ? (
-                <img 
+                <img
                 src={`https:image.tmdb.org/t/p/w200${media.poster_path}`}
                 alt={`${media.title} Poster`}
                 />
@@ -26,22 +17,13 @@ export const MediaCard = ({ media,type }) => {
             )}
         </div>
         </Link>
-
+ 
         <div className="info">
             <div className="header">
                 <h3 className="title">{media.title} {media.name}</h3>
                 <h4 className="release-date">
                     {media.release_date ? media.release_date.substring(0, 4) : ''} {media.first_air_date ? media.first_air_date.substring(0, 4) : ''}
                     </h4>
-                <h4 className="overview">
-                   
-                </h4>
-        
-            </div>
-            <div className="controls">
-            <li>
-              
-            </li>
             </div>
         </div>
     </div>

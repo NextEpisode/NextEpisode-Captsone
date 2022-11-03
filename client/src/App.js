@@ -22,13 +22,14 @@ function App() {
       <Route path="/" element={<LandingPage></LandingPage>}></Route>
       <Route path="/home" element={<Home />}></Route>
       <Route path="/login" element={<SignIn />}></Route>
-      <Route path="/:id" element={<Profile />}></Route>
+      <Route path="/Profile" element={<Profile />}/>
       <Route path="/my-list" element={<MyList />}/>
       <Route path="/search" element={<Search />}/>
-      <Route path="/media-page" element={<MediaPage />}/>
+      <Route path="/media-page/:id" element={<MediaPage />}/>
     </Routes>
   </BrowserRouter>
     );
-}
 
+}
+ 
 export default App;
