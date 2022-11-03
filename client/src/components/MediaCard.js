@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from "react-router-dom";
 
-export const MediaCard = ({ media }) => {
+export const MediaCard = ({ media,type }) => {
   return (
     <div className="media-card">
        
