@@ -68,16 +68,16 @@ class TVKatalogueHandler:
             dao.delete(TVKID)
             return jsonify(DeleteStatus = "OK"), 200
 
-    def updateTVkatalogueJson(self, TVKID, json):
+    def updateTVkatalogueJson(self, json):
         dao = TVKatalogueDao.TVKatalogueDAO()
-        if not dao.getTVKatalogueById(TVKID):
+        tvkid = json['TVKID']
+        uid = json['UID']
+        tvid = json['TVID']
+        tvkustatus = json['TVKUStatus']
+        if not dao.getTVKatalogueById(tvkid):
             return jsonify(Error="TVWL not found."), 404
         else:
-            TVKID = json['TVKID']
-            uid = json['UID']
-            tvid = json['TVID']
-            tvkustatus = json['TVKUStatus']
-            if TVKID and uid and tvid and tvkustatus:
-                dao.update(TVKID, uid, tvid, tvkustatus)
-                result = self.build_tvkatalogues_attributes(TVKID, uid, tvid, tvkustatus)
+            if tvkid and uid and tvid and tvkustatus:
+                dao.update(tvkid, uid, tvid, tvkustatus)
+                result = self.build_tvkatalogues_attributes(tvkid, uid, tvid, tvkustatus)
                 return jsonify(tvkatalogues=result), 200

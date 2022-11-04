@@ -47,15 +47,16 @@ class UserHandler:
             else:
                 return jsonify(Error="Unexpected attributes in post request"), 400
 
-    def updateUserJson(self, uid, json):
+    def updateUserJson(self, json):
         dao = UserDao.UserDAO()
+        uid = json["UID"]
+        uname = json['UName']
+        uemail = json['UEmail']
         if not dao.getUserById(uid):
-            return jsonify(Error="Admin not found."), 404
+            return jsonify(Error="User not found."), 404
         else:
-            uname = json['UName']
-            uemail = json['UEmail']
-            if uname and uemail:
-                dao.update(uname, uemail)
+            if uid and uname and uemail:
+                dao.update(uid, uname, uemail)
                 result = self.build_users_attributes(uid, uname, uemail)
                 return jsonify(Users=result), 200
 

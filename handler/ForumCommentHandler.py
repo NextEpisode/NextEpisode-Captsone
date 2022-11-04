@@ -58,15 +58,16 @@ class ForumCommentHandler:
             dao.delete(fid)
             return jsonify(DeleteStatus = "OK"), 200
 
-    def updateForumCommentJson(self, fid, json):
+    def updateForumJson(self, json):
         dao = ForumCommentDao.ForumCommentDAO()
-        if not dao.getForumCommentById(fid):
-            return jsonify(Error="Forum not found."), 404
+        fcid = json["FCID"]
+        fid = json["FID"]
+        uid = json["UID"]
+        fctext = ["FCText"]
+        if not dao.getForumCommentById(fcid):
+            return jsonify(Error="Comment not found."), 404
         else:
-            fid = json['UID']
-            uid =json['UID']
-            ftext = json['FCText']
-            if fid and uid and ftext:
-                dao.update(fid, uid, ftext)
-                result = self.build_forumcomments_attributes(fid, uid, ftext)
+            if fcid and fid and uid and fctext:
+                dao.update(fcid, fid, uid, fctext)
+                result = self.build_forumcomments_attributes(fcid, fid, uid, fctext)
                 return jsonify(Forums=result), 200

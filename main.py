@@ -38,6 +38,11 @@ def useropt():
         if request.method == 'POST':
             print("REQUEST: ", request.json)
             return UserHandler().insertUserJson(request.json)
+        else:
+            if request.method == "PUT":
+                print("REQUEST: ", request.json)
+                return UserHandler().updateUserJson(request.json)
+
 
 #User Area ------------------------------------------------------
 
@@ -48,7 +53,7 @@ def forum():
     if request.method == 'GET':
             return ForumHandler().getAllForums()
 
-@app.route('/forum/opt', methods=['GET', 'POST'])
+@app.route('/forum/opt', methods=['GET', 'POST', 'PUT'])
 def forumopt():
     if request.method == 'GET':
             print("REQUEST: ", request.json)
@@ -57,13 +62,17 @@ def forumopt():
         if request.method == 'POST':
             print("REQUEST: ", request.json)
             return ForumHandler().insertForumJson(request.json)
+        else:
+            if request.method == "PUT":
+                print("REQUEST: ", request.json)
+                return ForumHandler().updateForumJson(request.json)
 
 @app.route('/forumcomm', methods=['GET'])
 def forumcomm():
     if request.method == 'GET':
             return ForumCommentHandler().getAllForumComments()
 
-@app.route('/forumcomm/opt', methods=['GET', 'POST'])
+@app.route('/forumcomm/opt', methods=['GET', 'POST', 'PUT'])
 def forumcommopt():
     if request.method == 'GET':
             print("REQUEST: ", request.json)
@@ -72,6 +81,10 @@ def forumcommopt():
         if request.method == 'POST':
             print("REQUEST: ", request.json)
             return ForumCommentHandler().insertForumCommentJson(request.json)
+        else:
+            if request.method == "PUT":
+                print("REQUEST: ", request.json)
+                return ForumCommentHandler().updateForumCommentJson(request.json)
 
 #Forum Area End
 
@@ -83,7 +96,7 @@ def mk():
     if request.method == 'GET':
             return MovieKatalogueHandler().getAllMovieKatalogues()
 
-@app.route('/moviekatalogue/opt', methods=['GET', 'POST'])
+@app.route('/moviekatalogue/opt', methods=['GET', 'POST', 'PUT'])
 def mkopt():
     if request.method == 'GET':
             print("REQUEST: ", request.json)
@@ -92,6 +105,11 @@ def mkopt():
         if request.method == 'POST':
             print("REQUEST: ", request.json)
             return MovieKatalogueHandler().insertMovieKatalogueJson(request.json)
+        else:
+            if request.method == "PUT":
+                print("REQUEST: ", request.json)
+                return MovieKatalogueHandler().updateMovieKatalogueJson(request.json)
+
 
 #Movie Area-----------------------------------------------------------------
 #TV Area--------------------------------------------------------------------
@@ -101,7 +119,7 @@ def tv():
     if request.method == 'GET':
             return TVKatalogueHandler().getAllTVKatalogues()
 
-@app.route('/tvkatalogue/opt', methods=['GET', 'POST'])
+@app.route('/tvkatalogue/opt', methods=['GET', 'POST', 'PUT'])
 def tvopt():
     if request.method == 'GET':
             print("REQUEST: ", request.json)
@@ -110,6 +128,10 @@ def tvopt():
         if request.method == 'POST':
             print("REQUEST: ", request.json)
             return TVKatalogueHandler().insertTVKatalogueJson(request.json)
+        else:
+            if request.method == "PUT":
+                print("REQUEST: ", request.json)
+                return TVKatalogueHandler().updateTVkatalogueJson(request.json)
 
 #TV Area--------------------------------------------------------------------
 

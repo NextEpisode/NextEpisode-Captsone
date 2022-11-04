@@ -68,16 +68,16 @@ class MovieKatalogueHandler:
             dao.delete(uid)
             return jsonify(DeleteStatus = "OK"), 200
 
-    def updateMovieKatalogueJson(self, MKID, json):
+    def updateMovieKatalogueJson(self, json):
         dao = MovieKatalogueDao.MovieKatalogueDAO()
-        if not dao.getMovieKatalogueById(MKID):
-            return jsonify(Error="MWL not found."), 404
+        mkid = json['MKID']
+        uid = json['UID']
+        movieid = json['MovieID']
+        mkustatus = json['MKUStatus']
+        if not dao.getMovieKatalogueById(mkid):
+            return jsonify(Error="Movie Katalogue not found."), 404
         else:
-            MKID = json['MKID']
-            uid = json['UID']
-            movieid = json['MovieID']
-            mkustatus = json['MKUStatus']
-            if uid and movieid and mkustatus:
-                dao.update(MKID, uid, movieid, mkustatus)
-                result = self.build_moviekatalogues_attributes(MKID, uid, movieid, mkustatus)
+            if mkid and uid and movieid and mkustatus:
+                dao.update(mkid, uid, movieid, mkustatus)
+                result = self.build_moviekatalogues_attributes(mkid, uid, movieid, mkustatus)
                 return jsonify(moviekatalogues=result), 200

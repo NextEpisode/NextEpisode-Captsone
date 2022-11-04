@@ -58,15 +58,16 @@ class ForumHandler:
             dao.delete(fid)
             return jsonify(DeleteStatus = "OK"), 200
 
-    def updateForumJson(self, fid, json):
+    def updateForumJson(self, json):
         dao = ForumDao.ForumDAO()
+        fid = json["FID"]
+        uid = json["UID"]
+        fcategory = ["FCategory"]
+        fname = ["FName"]
         if not dao.getForumById(fid):
             return jsonify(Error="Forum not found."), 404
         else:
-            uid = json['UID']
-            fcategory =json['FCategory']
-            fname = json['FName']
-            if uid and fcategory and fname:
-                dao.update(uid, fcategory, fname)
+            if fid and uid and fcategory and fname:
+                dao.update(fid, uid, fcategory, fname)
                 result = self.build_forums_attributes(fid, uid, fcategory, fname)
                 return jsonify(Forums=result), 200

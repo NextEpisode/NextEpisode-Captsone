@@ -59,12 +59,12 @@ class UserDAO:
         self.conn.commit()
         return UID
 
-    def update(self, UID, uname, uemail):
+    def update(self, uid, uname, uemail):
         cursor = self.conn.cursor()
         query = "update [User] set uname = ?, uemail = ? where uid = ?;"
-        cursor.execute(query, (uname, uemail, UID,))
+        cursor.execute(query, (uname, uemail, uid,))
         self.conn.commit()
-        return UID
+        return uid
 
     def lastInsert(self):
         cursor = self.conn.cursor()
