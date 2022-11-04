@@ -1,10 +1,7 @@
 from flask import Flask, request
-from handler.ForumHandler import ForumHandler
 from handler.UserHandler import UserHandler
 from handler.MovieKatalogueHandler import MovieKatalogueHandler
 from handler.TVKatalogueHandler import TVKatalogueHandler
-from handler.ForumHandler import ForumHandler
-from handler.ForumCommentHandler import ForumCommentHandler
 from flask_cors import CORS
 
 # Activate
@@ -33,7 +30,7 @@ def users():
 def useropt():
     if request.method == 'GET':
             print("REQUEST: ", request.json)
-            return UserHandler().getUserById(request.json)
+            return UserHandler().getUserByGoogleId(request.json)
     else:
         if request.method == 'POST':
             print("REQUEST: ", request.json)
@@ -47,44 +44,6 @@ def useropt():
 #User Area ------------------------------------------------------
 
 #Forum Area Begin
-
-@app.route('/forum', methods=['GET'])
-def forum():
-    if request.method == 'GET':
-            return ForumHandler().getAllForums()
-
-@app.route('/forum/opt', methods=['GET', 'POST', 'PUT'])
-def forumopt():
-    if request.method == 'GET':
-            print("REQUEST: ", request.json)
-            return ForumHandler().getForumById(request.json)
-    else:
-        if request.method == 'POST':
-            print("REQUEST: ", request.json)
-            return ForumHandler().insertForumJson(request.json)
-        else:
-            if request.method == "PUT":
-                print("REQUEST: ", request.json)
-                return ForumHandler().updateForumJson(request.json)
-
-@app.route('/forumcomm', methods=['GET'])
-def forumcomm():
-    if request.method == 'GET':
-            return ForumCommentHandler().getAllForumComments()
-
-@app.route('/forumcomm/opt', methods=['GET', 'POST', 'PUT'])
-def forumcommopt():
-    if request.method == 'GET':
-            print("REQUEST: ", request.json)
-            return ForumCommentHandler().getForumCommentById(request.json)
-    else:
-        if request.method == 'POST':
-            print("REQUEST: ", request.json)
-            return ForumCommentHandler().insertForumCommentJson(request.json)
-        else:
-            if request.method == "PUT":
-                print("REQUEST: ", request.json)
-                return ForumCommentHandler().updateForumCommentJson(request.json)
 
 #Forum Area End
 

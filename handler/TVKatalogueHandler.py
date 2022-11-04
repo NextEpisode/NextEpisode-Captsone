@@ -9,14 +9,25 @@ class TVKatalogueHandler:
         result['UID'] = row[1]
         result['TVID'] = row[2]
         result['TVKUStatus']=row[3]
+        result['TVKUSeason']=row[4]
+        result['TVKUEpisode']=row[5]
         return result
-
-    def build_tvkatalogues_attributes(self, TVKID, UID, TVID, TVKUStatus):
+    #Unique ID
+    #UserID
+    #TVshow ID
+    #TVKatalogue User Status (Watching, Planning to watch, etc)
+    #TVKUSeason is self explanatoru (season count)
+    #TVKUEpisode is self explanatory (episode count)
+    #TVKUActivity is a deletion flag. Not sure if 0 is active or inactive. Decide with team later.
+    
+    def build_tvkatalogues_attributes(self, TVKID, UID, TVID, TVKUStatus, TVKUSeason, TVKUEpisode,):
         result = {}
         result['TVKID'] = TVKID
         result['UID'] = UID
         result['TVID'] = TVID
         result['TVKUStatus']=TVKUStatus
+        result['TVKUSeason']=TVKUSeason
+        result['TVKUEpisode']=TVKUEpisode
         return result
 
     def getAllTVKatalogues(self):
@@ -52,10 +63,12 @@ class TVKatalogueHandler:
             uid = json['UID']
             tvid = json['TVID']
             tvkustatus=json['TVKUStatus']
-            if uid and tvid and tvkustatus:
+            tvkuseason = json['TVKUSeason']
+            tvkuepisode=json['TVKUEpisode']
+            if uid and tvid and tvkustatus and tvkuseason and tvkuepisode:
                 dao = TVKatalogueDao.TVKatalogueDAO()
-                TVKID = dao.insert(uid, tvid, tvkustatus)
-                result = self.build_tvkatalogues_attributes(TVKID, uid, tvid, tvkustatus)
+                TVKID = dao.insert(uid, tvid, tvkustatus, tvkuseason, tvkuepisode)
+                result = self.build_tvkatalogues_attributes(TVKID, uid, tvid, tvkustatus, tvkuseason, tvkuepisode)
                 return jsonify(tvkatalogues=result), 201
             else:
                 return jsonify(Error="Unexpected attributes in post request"), 400
