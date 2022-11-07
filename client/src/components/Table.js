@@ -63,6 +63,7 @@ function MovieTable({medias}){
 }
 
 function SeriesTable({medias}){
+
     let episodes = 0;
     return(
         <TableContainer component={Paper}>
@@ -70,16 +71,16 @@ function SeriesTable({medias}){
         <TableHead>
           <TableRow>
             <TableCell>Poster </TableCell>
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="right">Title</TableCell>
+            <TableCell align="left">Title</TableCell>
             <TableCell align="right">Release Date</TableCell>
             <TableCell align="right">Episode</TableCell>
+            <TableCell align="right">Status</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {medias.map((media) => (
             <TableRow
-              key={media.name}
+              key={media.title}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell align="right">
@@ -93,9 +94,9 @@ function SeriesTable({medias}){
               <TableCell component="th" scope="row">
                 {media.name}
               </TableCell>
-              <TableCell align="right">{media.title}</TableCell>
               <TableCell align="right">{media.release_date}</TableCell>
               <TableCell align="right">{media.episode}<IconButton color="primary" onClick={addToEpisodes(episodes)}><AddIcon fontSize="small" /> 
+              <TableCell align="right">Currently watching</TableCell>
       </IconButton></TableCell>
             </TableRow>
           ))}
