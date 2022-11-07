@@ -49,10 +49,10 @@ class UserDAO:
         result = cursor.fetchone()
         return result
 
-    def insert(self, uname, uemail, googleid):
+    def insert(self, uname, googleid):
         cursor = self.conn.cursor()
-        query = "insert into [User](uname, uemail, googleid) values (?, ?, ?);"
-        cursor.execute(query, (uname, uemail, googleid))
+        query = "insert into [User](uname, googleid) values (?, ?);"
+        cursor.execute(query, (uname, googleid))
         query = "SELECT @@IDENTITY AS [UID];"
         cursor.execute(query)
         result = cursor.fetchone()[0]
@@ -66,10 +66,10 @@ class UserDAO:
         self.conn.commit()
         return UID
 
-    def update(self, uid, uname, uemail, googleid):
+    def update(self, uid, uname, googleid):
         cursor = self.conn.cursor()
-        query = "update [User] set uname = ?, uemail = ?, googleid = ? where uid = ?;"
-        cursor.execute(query, (uname, uemail, uid, googleid))
+        query = "update [User] set uname = ? where uid = ? and googleid = ?;"
+        cursor.execute(query, (uname, uid, googleid))
         self.conn.commit()
         return uid
 

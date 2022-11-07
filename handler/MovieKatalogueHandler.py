@@ -52,13 +52,17 @@ class MovieKatalogueHandler:
             uid = json['UID']
             movieid = json['MovieID']
             mkustatus = json['MKUStatus']
-            if uid and movieid and mkustatus:
-                dao = MovieKatalogueDao.MovieKatalogueDAO()
-                mkid = dao.insert(uid, movieid, mkustatus)
-                result = self.build_moviekatalogues_attributes(mkid, uid, movieid, mkustatus)
-                return jsonify(moviekatalogues=result), 201
+            dao = MovieKatalogueDao.MovieKatalogueDAO()
+            row = dao.getExistingEntry(uid, movieid)
+            if row:
+                return jsonify(Error = "Entry Exists."), 404
             else:
-                return jsonify(Error="Unexpected attributes in post request"), 400
+                if uid and movieid and mkustatus:
+                    mkid = dao.insert(uid, movieid, mkustatus)
+                    result = self.build_moviekatalogues_attributes(mkid, uid, movieid, mkustatus)
+                    return jsonify(moviekatalogues=result), 201
+                else:
+                    return jsonify(Error="Unexpected attributes in post request"), 400
 
     def deleteMovieKatalogue(self, uid):
         dao = MovieKatalogueDao.MovieKatalogueDAO()

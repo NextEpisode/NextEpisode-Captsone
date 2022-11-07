@@ -44,6 +44,13 @@ class MovieKatalogueDAO:
         cursor.execute(query, (UID,))
         result = cursor.fetchone()
         return result
+    
+    def getExistingEntry(self, uid, movieid):
+        cursor = self.conn.cursor()
+        query = "select * from [MovieKatalogue] Where uid = ? and movieid = ?;"
+        cursor.execute(query, (uid, movieid))
+        result = cursor.fetchone()
+        return result
 
     def insert(self, uid, movieid, mkustatus):
         cursor = self.conn.cursor()
@@ -62,9 +69,9 @@ class MovieKatalogueDAO:
         self.conn.commit()
         return MKID
 
-    def update(self, MKID, uid, movieid, mkustatus):
+    def update(self, mkid, uid, movieid, mkustatus):
         cursor = self.conn.cursor()
-        query = "update [MovieKatalogue] set uid = ?, movieid = ?, mkustatus=? where MKID = ?;"
-        cursor.execute(query, (uid, movieid, mkustatus, MKID))
+        query = "update [MovieKatalogue] set mkustatus=? where MKID = ? and movieid =? and uid = ?;"
+        cursor.execute(query, (mkustatus, mkid, movieid, uid))
         self.conn.commit()
-        return MKID
+        return mkid

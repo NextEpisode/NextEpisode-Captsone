@@ -65,13 +65,17 @@ class TVKatalogueHandler:
             tvkustatus=json['TVKUStatus']
             tvkuseason = json['TVKUSeason']
             tvkuepisode=json['TVKUEpisode']
-            if uid and tvid and tvkustatus and tvkuseason and tvkuepisode:
-                dao = TVKatalogueDao.TVKatalogueDAO()
-                TVKID = dao.insert(uid, tvid, tvkustatus, tvkuseason, tvkuepisode)
-                result = self.build_tvkatalogues_attributes(TVKID, uid, tvid, tvkustatus, tvkuseason, tvkuepisode)
-                return jsonify(tvkatalogues=result), 201
+            dao = TVKatalogueDao.TVKatalogueDAO()
+            row = dao.getExistingEntry(uid, tvid)
+            if row:
+                return jsonify(Error = "Entry Exists."), 404
             else:
-                return jsonify(Error="Unexpected attributes in post request"), 400
+                if uid and tvid and tvkustatus and tvkuseason and tvkuepisode:
+                    tvkid = dao.insert(uid, tvid, tvkustatus, tvkuseason, tvkuepisode)
+                    result = self.build_tvkatalogues_attributes(tvkid, uid, tvid, tvkustatus, tvkuseason, tvkuepisode)
+                    return jsonify(tvkatalogues=result), 201
+                else:
+                    return jsonify(Error="Unexpected attributes in post request"), 400
 
     def deleteTVkatalogue(self, TVKID):
         dao = TVKatalogueDao.TVKatalogueDAO()
@@ -87,10 +91,12 @@ class TVKatalogueHandler:
         uid = json['UID']
         tvid = json['TVID']
         tvkustatus = json['TVKUStatus']
+        tvkuseason = json['TVKUSeason']
+        tvkuepisode =json['TVKUEpisode']
         if not dao.getTVKatalogueById(tvkid):
             return jsonify(Error="TVWL not found."), 404
         else:
-            if tvkid and uid and tvid and tvkustatus:
-                dao.update(tvkid, uid, tvid, tvkustatus)
-                result = self.build_tvkatalogues_attributes(tvkid, uid, tvid, tvkustatus)
+            if tvkid and uid and tvid and tvkustatus and tvkuseason and tvkuepisode:
+                dao.update(tvkid, uid, tvid, tvkustatus, tvkuseason, tvkuepisode)
+                result = self.build_tvkatalogues_attributes(tvkid, uid, tvid, tvkustatus, tvkuseason, tvkuepisode)
                 return jsonify(tvkatalogues=result), 200

@@ -45,11 +45,18 @@ class TVKatalogueDAO:
         cursor.execute(query, (UID,))
         result = cursor.fetchone()
         return result
-
-    def insert(self, uid, tvid, tvkustatus):
+    
+    def getExistingEntry(self, UID, TVID):
         cursor = self.conn.cursor()
-        query = "insert into [TVKatalogue](uid, tvid, tvkustatus) values (?, ?, ?) ;"
-        cursor.execute(query, (uid, tvid, tvkustatus))
+        query = "select * from [TVKatalogue] Where uid = ? and tvid = ?;"
+        cursor.execute(query, (UID,TVID))
+        result = cursor.fetchone()
+        return result
+
+    def insert(self, uid, tvid, tvkustatus, tvkuseason, tvkuepisode):
+        cursor = self.conn.cursor()
+        query = "insert into [TVKatalogue](uid, tvid, tvkustatus, tvkuseason, tvkuepisode) values (?, ?, ?,?,?) ;"
+        cursor.execute(query, (uid, tvid, tvkustatus, tvkuseason, tvkuepisode))
         query = "SELECT @@IDENTITY AS [TVKID];"
         cursor.execute(query)
         result = cursor.fetchone()[0]
@@ -63,9 +70,10 @@ class TVKatalogueDAO:
         self.conn.commit()
         return tvkid
 
-    def update(self, tvkid, uid, tvid, tvkustatus):
+    def update(self, tvkid, uid, tvid, tvkustatus, tvkuseason, tvkuepisode):
         cursor = self.conn.cursor()
-        query = "update [TVKatalogue] set uid = ?, tvid = ?, tvkustatus = ? where tvkid = ?;"
-        cursor.execute(query, (uid, tvid, tvkid, tvkustatus))
-        self.conn.commit()
+        query = "update [TVKatalogue] set tvkustatus = ?, tvkuseason = ?, tvkuepisode = ? where tvid = ? and uid=? and tvkid = ?;"
+        cursor.execute(query, (tvkustatus, tvkuseason, tvkuepisode, tvid, uid, tvkid))
+        cursor.commit()
         return tvkid
+    #Bug, Unsure why its not updating.
