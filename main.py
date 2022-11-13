@@ -38,7 +38,7 @@ def useropt():
         else:
             if request.method == "PUT":
                 print("REQUEST: ", request.json)
-                return UserHandler().updateUserJson(request.json)
+                return UserHandler().updateUserJson(request.json)#Works
             else:
                  if request.method == "DELETE":
                     print("REQUEST: ", request.json)

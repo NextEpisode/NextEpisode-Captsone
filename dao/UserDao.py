@@ -65,7 +65,7 @@ class UserDAO:
 
     def insert(self, googleid, uname):
         cursor = self.conn.cursor()
-        query = "insert into [Users](googleid, uname) values (?, ?);"
+        query = "insert into [Users](GoogleID, UName) values (?, ?);"
         cursor.execute(query, (googleid, uname))
         query = "SELECT @@IDENTITY AS [UID];"
         cursor.execute(query)
@@ -80,7 +80,7 @@ class UserDAO:
         self.conn.commit()
         return gid
 
-    def update(self, uname, googleid):
+    def update(self, googleid, uname):
         cursor = self.conn.cursor()
         query = "update [Users] set uname = ? where googleid = ?;"
         cursor.execute(query, (uname, googleid))
