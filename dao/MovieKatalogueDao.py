@@ -30,48 +30,66 @@ class MovieKatalogueDAO:
         for row in cursor:
             result.append(row)
         return result
-
-    def getMovieKatalogueById(self, MKID):
+    
+    def getMovieKataloguesByKID(self, kid):
         cursor = self.conn.cursor()
-        query = "select * from [MovieKatalogue] Where MKID = ?;"
-        cursor.execute(query, (MKID))
-        result = cursor.fetchone()
+        query = "select * from [MovieKatalogue] Where kid = ?;"
+        cursor.execute(query, (kid))
+        result = []
+        for row in cursor:
+            result.append(row)
         return result
 
-    def getMovieKatalogueByUID(self, UID):
+    def getMovieKataloguesByStatus(self, KID, status):
         cursor = self.conn.cursor()
-        query = "select * from [MovieKatalogue] Where uid = ?;"
-        cursor.execute(query, (UID,))
+        query = "select * from [MovieKatalogue] Where KID = ? and mkustatus = ?;"
+        cursor.execute(query, (KID, status))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    
+    def getMovieKatalogueByKID(self, kid, movieid):
+        cursor = self.conn.cursor()
+        query = "select * from [MovieKatalogue] Where kid = ? and movieid = ?;"
+        cursor.execute(query, (kid, movieid))
         result = cursor.fetchone()
         return result
     
-    def getExistingEntry(self, uid, movieid):
+    def getExistingEntry(self, kid, movieid):
         cursor = self.conn.cursor()
-        query = "select * from [MovieKatalogue] Where uid = ? and movieid = ?;"
-        cursor.execute(query, (uid, movieid))
+        query = "select * from [MovieKatalogue] Where kid = ? and movieid = ?;"
+        cursor.execute(query, (kid, movieid))
         result = cursor.fetchone()
         return result
 
-    def insert(self, uid, movieid, mkustatus):
+    def insert(self, kid, movieid, mkustatus):
         cursor = self.conn.cursor()
-        query = "insert into [MovieKatalogue](uid, movieid, mkustatus) values (?, ?, ?) ;"
-        cursor.execute(query, (uid, movieid, mkustatus))
+        query = "insert into [MovieKatalogue](kid, movieid, mkustatus) values (?, ?, ?) ;"
+        cursor.execute(query, (kid, movieid, mkustatus))
         query = "SELECT @@IDENTITY AS [MKID];"
         cursor.execute(query)
         result = cursor.fetchone()[0]
         cursor.commit()
         return result
 
-    def delete(self, MKID):
+    def delete(self, kid, movieid):
         cursor = self.conn.cursor()
-        query = "delete from [MovieKatalogue] where MKID = ?;"
-        cursor.execute(query, (MKID,))
+        query = "delete from [MovieKatalogue] where kid = ? and movieid = ?;"
+        cursor.execute(query, (kid, movieid))
         self.conn.commit()
-        return MKID
+        return kid
+    
+    def deleteAll(self, KID):
+        cursor = self.conn.cursor()
+        query = "delete from [MovieKatalogue] where kid = ?;"
+        cursor.execute(query, (KID))
+        self.conn.commit()
+        return KID
 
-    def update(self, mkid, uid, movieid, mkustatus):
+    def update(self, kid, movieid, mkustatus):
         cursor = self.conn.cursor()
-        query = "update [MovieKatalogue] set mkustatus=? where MKID = ? and movieid =? and uid = ?;"
-        cursor.execute(query, (mkustatus, mkid, movieid, uid))
+        query = "update [MovieKatalogue] set mkustatus=? where movieid =? and kid = ?;"
+        cursor.execute(query, (mkustatus, movieid, kid))
         self.conn.commit()
-        return mkid
+        return kid

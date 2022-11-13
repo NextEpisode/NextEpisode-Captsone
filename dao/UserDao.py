@@ -28,7 +28,7 @@ class UserDAO:
 
     def getAllUsers(self):
         cursor = self.conn.cursor()
-        query = "select * from [User];"
+        query = "select * from [Users];"
         cursor.execute(query)
         result = []
         for row in cursor:
@@ -37,41 +37,55 @@ class UserDAO:
 
     def getUserById(self, UID):
         cursor = self.conn.cursor()
-        query = "select * from [User] Where uid = ?;"
+        query = "select * from [Users] Where uid = ?;"
         cursor.execute(query, (UID,))
         result = cursor.fetchone()
         return result
 
     def getUserByGoogleId(self, googleid):
         cursor = self.conn.cursor()
-        query = "select * from [User] Where googleid = ?;"
+        query = "select * from [Users] Where googleid = ?;"
         cursor.execute(query, (googleid,))
         result = cursor.fetchone()
         return result
-
-    def insert(self, uname, googleid):
+    
+    def getUserKID(self, uid):
         cursor = self.conn.cursor()
-        query = "insert into [User](uname, googleid) values (?, ?);"
-        cursor.execute(query, (uname, googleid))
+        query = "select KID from [Users] Where uid = ?;"
+        cursor.execute(query, (uid,))
+        result = cursor.fetchone()[0]
+        return result
+    
+    def getUserUID(self, gid):
+        cursor = self.conn.cursor()
+        query = "select UID from [Users] Where googleid = ?;"
+        cursor.execute(query, (gid,))
+        result = cursor.fetchone()[0]
+        return result
+
+    def insert(self, googleid, uname):
+        cursor = self.conn.cursor()
+        query = "insert into [Users](googleid, uname) values (?, ?);"
+        cursor.execute(query, (googleid, uname))
         query = "SELECT @@IDENTITY AS [UID];"
         cursor.execute(query)
         result = cursor.fetchone()[0]
         cursor.commit()
         return result
 
-    def delete(self, UID):
+    def delete(self, gid):
         cursor = self.conn.cursor()
-        query = "delete from [User] where uid = ?;"
-        cursor.execute(query, (UID,))
+        query = "delete from [Users] where googleid = ?;"
+        cursor.execute(query, (gid,))
         self.conn.commit()
-        return UID
+        return gid
 
-    def update(self, uid, uname, googleid):
+    def update(self, uname, googleid):
         cursor = self.conn.cursor()
-        query = "update [User] set uname = ? where uid = ? and googleid = ?;"
-        cursor.execute(query, (uname, uid, googleid))
+        query = "update [Users] set uname = ? where googleid = ?;"
+        cursor.execute(query, (uname, googleid))
         self.conn.commit()
-        return uid
+        return googleid
 
     def lastInsert(self):
         cursor = self.conn.cursor()

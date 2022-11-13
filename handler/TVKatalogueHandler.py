@@ -5,12 +5,11 @@ from dao import TVKatalogueDao
 class TVKatalogueHandler:
     def build_tvkatalogues_dict(self, row):
         result = {}
-        result['TVKID'] = row[0]
-        result['UID'] = row[1]
-        result['TVID'] = row[2]
-        result['TVKUStatus']=row[3]
-        result['TVKUSeason']=row[4]
-        result['TVKUEpisode']=row[5]
+        result['KID'] = row[0]
+        result['TVID'] = row[1]
+        result['TVKUStatus']=row[2]
+        result['TVKUSeason']=row[3]
+        result['TVKUEpisode']=row[4]
         return result
     #Unique ID
     #UserID
@@ -20,10 +19,9 @@ class TVKatalogueHandler:
     #TVKUEpisode is self explanatory (episode count)
     #TVKUActivity is a deletion flag. Not sure if 0 is active or inactive. Decide with team later.
     
-    def build_tvkatalogues_attributes(self, TVKID, UID, TVID, TVKUStatus, TVKUSeason, TVKUEpisode,):
+    def build_tvkatalogues_attributes(self, KID, TVID, TVKUStatus, TVKUSeason, TVKUEpisode,):
         result = {}
-        result['TVKID'] = TVKID
-        result['UID'] = UID
+        result['KID'] = KID
         result['TVID'] = TVID
         result['TVKUStatus']=TVKUStatus
         result['TVKUSeason']=TVKUSeason
@@ -38,65 +36,80 @@ class TVKatalogueHandler:
             result = self.build_tvkatalogues_dict(row)
             result_list.append(result)
         return jsonify(tvkatalogues=result_list)
-
-    def getTVKatalogueById(self, json):
-        TVKID=json["TVKID"]
+    
+    def getAllTVKataloguesByKID(self, json):
+        kid = json["KID"]
         dao = TVKatalogueDao.TVKatalogueDAO()
-        row = dao.getTVKatalogueById(TVKID)
-        if not row:
-            return jsonify(Error = "tvkatalogue Not Found"), 404
-        else:
-            tvkatalogues = self.build_tvkatalogues_dict(row)
-            return jsonify(tvkatalogues = tvkatalogues)
+        tvkatalogues_list = dao.getTVKataloguesByKID(kid)
+        result_list = []
+        for row in tvkatalogues_list:
+            result = self.build_tvkatalogues_dict(row)
+            result_list.append(result)
+        return jsonify(tvkatalogues=result_list)
 
-    def getTVKatalogueByUId(self, json):
-        uid = json["UID"]
+    def getAllTVKataloguesByStatus(self, json):
+        kid = json["KID"]
+        status = json["TVKUStatus"]
         dao = TVKatalogueDao.TVKatalogueDAO()
-        row = dao.getTVKatalogueByUID(uid)
+        row = dao.getAllTVKataloguesByStatus(kid, status)
         if not row:
-            return jsonify(Error = "tvkatalogue Not Found"), 404
+            return jsonify(Error = "Katalogues Not Found"), 404
         else:
-            tvkatalogues = self.build_tvkatalogues_dict(row)
-            return jsonify(tvkatalogues = tvkatalogues)
+            result_list = []
+            for row in row:
+                result = self.build_tvkatalogues_dict(row)
+                result_list.append(result)
+            return jsonify(tvkatalogues=result_list)
 
     def insertTVKatalogueJson(self, json):
-            uid = json['UID']
+            kid = json['KID']
             tvid = json['TVID']
             tvkustatus=json['TVKUStatus']
             tvkuseason = json['TVKUSeason']
             tvkuepisode=json['TVKUEpisode']
             dao = TVKatalogueDao.TVKatalogueDAO()
-            row = dao.getExistingEntry(uid, tvid)
+            row = dao.getExistingEntry(kid, tvid)
             if row:
                 return jsonify(Error = "Entry Exists."), 404
             else:
-                if uid and tvid and tvkustatus and tvkuseason and tvkuepisode:
-                    tvkid = dao.insert(uid, tvid, tvkustatus, tvkuseason, tvkuepisode)
-                    result = self.build_tvkatalogues_attributes(tvkid, uid, tvid, tvkustatus, tvkuseason, tvkuepisode)
+                if kid and tvid and tvkustatus and tvkuseason and tvkuepisode:
+                    dao.insert(kid, tvid, tvkustatus, tvkuseason, tvkuepisode)
+                    result = self.build_tvkatalogues_attributes(kid, tvid, tvkustatus, tvkuseason, tvkuepisode)
                     return jsonify(tvkatalogues=result), 201
                 else:
                     return jsonify(Error="Unexpected attributes in post request"), 400
 
-    def deleteTVkatalogue(self, TVKID):
-        dao = TVKatalogueDao.TVKatalogueDAO()
-        if not dao.getTVKatalogueById(TVKID):
-            return jsonify(Error = "tvkatalogue not found."), 404
-        else:
-            dao.delete(TVKID)
-            return jsonify(DeleteStatus = "OK"), 200
-
     def updateTVkatalogueJson(self, json):
         dao = TVKatalogueDao.TVKatalogueDAO()
-        tvkid = json['TVKID']
-        uid = json['UID']
+        kid = json['KID']
         tvid = json['TVID']
         tvkustatus = json['TVKUStatus']
         tvkuseason = json['TVKUSeason']
         tvkuepisode =json['TVKUEpisode']
-        if not dao.getTVKatalogueById(tvkid):
-            return jsonify(Error="TVWL not found."), 404
+        if not dao.getExistingEntry(kid, tvid):
+            return jsonify(Error="Katalogue not found."), 404
         else:
-            if tvkid and uid and tvid and tvkustatus and tvkuseason and tvkuepisode:
-                dao.update(tvkid, uid, tvid, tvkustatus, tvkuseason, tvkuepisode)
-                result = self.build_tvkatalogues_attributes(tvkid, uid, tvid, tvkustatus, tvkuseason, tvkuepisode)
+            if kid and tvid and tvkustatus and tvkuseason and tvkuepisode:
+                dao.updateKatalogue(kid, tvid, tvkustatus, tvkuseason, tvkuepisode)
+                result = self.build_tvkatalogues_attributes(kid, tvid, tvkustatus, tvkuseason, tvkuepisode)
                 return jsonify(tvkatalogues=result), 200
+            
+    #Delete multiple entries at once.
+            
+    def deleteTVkatalogue(self, json):
+        dao = TVKatalogueDao.TVKatalogueDAO()
+        kid = json['KID']
+        tvid = json['TVID']
+        if not dao.getTVKataloguesByKIDTVID(kid, tvid):
+            return jsonify(Error = "tvkatalogue not found."), 404
+        else:
+            dao.delete(kid, tvid)
+            return jsonify(DeleteStatus = "OK"), 200
+        
+
+    #Katalogue Purge.
+    def deleteAllTVKataloguesByKID(self, json):
+        dao = TVKatalogueDao.TVKatalogueDAO()
+        kid = json['KID']
+        dao.deleteAll(kid)
+        return jsonify(DeleteStatus = "OK"), 200

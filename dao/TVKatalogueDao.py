@@ -32,48 +32,86 @@ class TVKatalogueDAO:
             result.append(row)
         return result
 
-    def getTVKatalogueById(self, tvkid):
+    def getTVKataloguesByKID(self, kid):
         cursor = self.conn.cursor()
-        query = "select * from [TVKatalogue] Where tvkid = ?;"
-        cursor.execute(query, (tvkid))
-        result = cursor.fetchone()
-        return result
-
-    def getTVKatalogueByUID(self, UID):
-        cursor = self.conn.cursor()
-        query = "select * from [TVKatalogue] Where uid = ?;"
-        cursor.execute(query, (UID,))
-        result = cursor.fetchone()
+        query = "select * from [TVKatalogue] Where kid = ?;"
+        cursor.execute(query, (kid))
+        result = []
+        for row in cursor:
+            result.append(row)
         return result
     
-    def getExistingEntry(self, UID, TVID):
+    def getTVKataloguesByKIDTVID(self, kid, tvid):
         cursor = self.conn.cursor()
-        query = "select * from [TVKatalogue] Where uid = ? and tvid = ?;"
-        cursor.execute(query, (UID,TVID))
+        query = "select * from [TVKatalogue] Where kid = ? and tvid = ?;"
+        cursor.execute(query, (kid, tvid))
         result = cursor.fetchone()
         return result
 
-    def insert(self, uid, tvid, tvkustatus, tvkuseason, tvkuepisode):
+
+    def getAllTVKataloguesByStatus(self, kid, status):
         cursor = self.conn.cursor()
-        query = "insert into [TVKatalogue](uid, tvid, tvkustatus, tvkuseason, tvkuepisode) values (?, ?, ?,?,?) ;"
-        cursor.execute(query, (uid, tvid, tvkustatus, tvkuseason, tvkuepisode))
-        query = "SELECT @@IDENTITY AS [TVKID];"
-        cursor.execute(query)
-        result = cursor.fetchone()[0]
-        cursor.commit()
+        query = "select * from [TVKatalogue] where kid = ? and tvkustatus = ?;"
+        cursor.execute(query, (kid, status))
+        result = []
+        for row in cursor:
+            result.append(row)
+        return result
+    
+    def getExistingEntry(self, kid, tvid):
+        cursor = self.conn.cursor()
+        query = "select * from [TVKatalogue] Where kid = ? and tvid = ?;"
+        cursor.execute(query, (kid, tvid))
+        result = cursor.fetchone()
         return result
 
-    def delete(self, tvkid):
+    def insert(self, kid, tvid, tvkustatus, tvkuseason, tvkuepisode):
         cursor = self.conn.cursor()
-        query = "delete from [TVKatalogue] where tvkid = ?;"
-        cursor.execute(query, (tvkid,))
-        self.conn.commit()
-        return tvkid
+        query = "insert into [TVKatalogue](kid, tvid, tvkustatus, tvkuseason, tvkuepisode) values (?, ?, ?,?,?) ;"
+        cursor.execute(query, (kid, tvid, tvkustatus, tvkuseason, tvkuepisode))
+        cursor.commit()
+        return kid
+    
+    def updateKatalogue(self, kid, tvid, tvkustatus, tvkuseason, tvkuepisode):
+        cursor = self.conn.cursor()
+        query = "update [TVKatalogue] set tvkustatus = ?, tvkuseason = ?, tvkuepisode = ? where tvid = ? and kid=?;"
+        cursor.execute(query, (tvkustatus, tvkuseason, tvkuepisode, tvid, kid))
+        cursor.commit()
+        return kid
 
-    def update(self, tvkid, uid, tvid, tvkustatus, tvkuseason, tvkuepisode):
+    def updateStatus(self, tvkid, kid, tvid, tvkustatus):
         cursor = self.conn.cursor()
-        query = "update [TVKatalogue] set tvkustatus = ?, tvkuseason = ?, tvkuepisode = ? where tvid = ? and uid=? and tvkid = ?;"
-        cursor.execute(query, (tvkustatus, tvkuseason, tvkuepisode, tvid, uid, tvkid))
+        query = "update [TVKatalogue] set tvkustatus = ? where tvid = ? and kid=?;"
+        cursor.execute(query, (tvkustatus, tvid, kid))
         cursor.commit()
         return tvkid
-    #Bug, Unsure why its not updating.
+    
+    def updateSeason(self, tvkid, kid, tvid, tvkuseason):
+        cursor = self.conn.cursor()
+        query = "update [TVKatalogue] set tvkuseason = ?where tvid = ? and kid=?;"
+        cursor.execute(query, (tvkuseason,tvid, kid))
+        cursor.commit()
+        return tvkid
+    
+    def updateEpisode(self, tvkid, kid, tvid, tvkuepisode):
+        cursor = self.conn.cursor()
+        query = "update [TVKatalogue] set tvkuepisode = ? where tvid = ? and kid=?;"
+        cursor.execute(query, (tvkuepisode, tvid, kid))
+        cursor.commit()
+        return tvkid
+    
+    def delete(self, kid, tvid):
+        cursor = self.conn.cursor()
+        query = "delete from [TVKatalogue] where kid = ? and tvid = ?;"
+        cursor.execute(query, (kid, tvid))
+        self.conn.commit()
+        return kid
+    
+    def deleteAll(self, KID):
+        cursor = self.conn.cursor()
+        query = "delete from [TVKatalogue] where kid = ?;"
+        cursor.execute(query, (KID))
+        self.conn.commit()
+        return KID
+
+    #Make 3. Updates each one separately. 

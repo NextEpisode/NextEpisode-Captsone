@@ -5,16 +5,14 @@ from dao import MovieKatalogueDao
 class MovieKatalogueHandler:
     def build_moviekatalogues_dict(self, row):
         result = {}
-        result['MKID'] = row[0]
-        result['UID'] = row[1]
-        result['MovieID'] = row[2]
-        result['MKUStatus']=row[3]
+        result['KID'] = row[0]
+        result['MovieID'] = row[1]
+        result['MKUStatus']=row[2]
         return result
 
-    def build_moviekatalogues_attributes(self, MKID, UID, MovieID, MVKUStatus):
+    def build_moviekatalogues_attributes(self, KID, MovieID, MVKUStatus):
         result = {}
-        result['MKID'] = MKID
-        result['UID'] = UID
+        result['KID'] = KID
         result['MovieID'] = MovieID
         result['MKUStatus']=MVKUStatus
         return result
@@ -27,61 +25,73 @@ class MovieKatalogueHandler:
             result = self.build_moviekatalogues_dict(row)
             result_list.append(result)
         return jsonify(moviekatalogues=result_list)
-
-    def getMovieKatalogueById(self, json):
-        MKID = json["MKID"]
+    
+    def getAllMovieKataloguesByKID(self, json):
+        kid = json["KID"]
         dao = MovieKatalogueDao.MovieKatalogueDAO()
-        row = dao.getMovieKatalogueById(MKID)
-        if not row:
-            return jsonify(Error = "Katalogue Not Found"), 404
-        else:
-            moviekatalogues = self.build_moviekatalogues_dict(row)
-            return jsonify(moviekatalogues = moviekatalogues)
+        moviekatalogues_list = dao.getMovieKataloguesByKID(kid)
+        result_list = []
+        for row in moviekatalogues_list:
+            result = self.build_moviekatalogues_dict(row)
+            result_list.append(result)
+        return jsonify(moviekatalogues=result_list)
 
-    def getMovieKatalogueByUId(self, json):
-        UID=json["UID"]
+    def getAllMovieKataloguesByStatus(self, json):
+        kid = json["KID"]
+        status = json["MKUStatus"]
         dao = MovieKatalogueDao.MovieKatalogueDAO()
-        row = dao.getMovieKatalogueByUID(UID)
+        row = dao.getMovieKataloguesByStatus(kid, status)
         if not row:
-            return jsonify(Error = "Katalogue Not Found"), 404
+            return jsonify(Error = "Katalogues Not Found"), 404
         else:
-            moviekatalogues = self.build_moviekatalogues_dict(row)
-            return jsonify(moviekatalogues = moviekatalogues)
+            result_list = []
+            for row in row:
+                result = self.build_moviekatalogues_dict(row)
+                result_list.append(result)
+            return jsonify(moviekatalogues=result_list)
 
     def insertMovieKatalogueJson(self, json):
-            uid = json['UID']
+            kid = json['KID']
             movieid = json['MovieID']
             mkustatus = json['MKUStatus']
             dao = MovieKatalogueDao.MovieKatalogueDAO()
-            row = dao.getExistingEntry(uid, movieid)
+            row = dao.getExistingEntry(kid, movieid)
             if row:
                 return jsonify(Error = "Entry Exists."), 404
             else:
-                if uid and movieid and mkustatus:
-                    mkid = dao.insert(uid, movieid, mkustatus)
-                    result = self.build_moviekatalogues_attributes(mkid, uid, movieid, mkustatus)
+                if kid and movieid and mkustatus:
+                    dao.insert(kid, movieid, mkustatus)
+                    result = self.build_moviekatalogues_attributes(kid, movieid, mkustatus)
                     return jsonify(moviekatalogues=result), 201
                 else:
                     return jsonify(Error="Unexpected attributes in post request"), 400
 
-    def deleteMovieKatalogue(self, uid):
-        dao = MovieKatalogueDao.MovieKatalogueDAO()
-        if not dao.getMovieKatalogueById(uid):
-            return jsonify(Error = "Katalogue not found."), 404
-        else:
-            dao.delete(uid)
-            return jsonify(DeleteStatus = "OK"), 200
-
     def updateMovieKatalogueJson(self, json):
-        dao = MovieKatalogueDao.MovieKatalogueDAO()
-        mkid = json['MKID']
-        uid = json['UID']
+        kid = json['KID']
         movieid = json['MovieID']
         mkustatus = json['MKUStatus']
-        if not dao.getMovieKatalogueById(mkid):
+        dao = MovieKatalogueDao.MovieKatalogueDAO()
+        if not dao.getExistingEntry(kid, movieid):
             return jsonify(Error="Movie Katalogue not found."), 404
         else:
-            if mkid and uid and movieid and mkustatus:
-                dao.update(mkid, uid, movieid, mkustatus)
-                result = self.build_moviekatalogues_attributes(mkid, uid, movieid, mkustatus)
+            if kid and movieid and mkustatus:
+                dao.update(kid, movieid, mkustatus)
+                result = self.build_moviekatalogues_attributes(kid, movieid, mkustatus)
                 return jsonify(moviekatalogues=result), 200
+    
+    def deleteMovieKatalogue(self, json):
+        dao = MovieKatalogueDao.MovieKatalogueDAO()
+        kid = json['KID']
+        movieid = json['MovieID']
+        if not dao.getExistingEntry(kid, movieid):
+            return jsonify(Error = "Katalogue not found."), 404
+        else:
+            dao.delete(kid, movieid)
+            return jsonify(DeleteStatus = "OK"), 200
+    
+    #User Katalogue Purge.
+    def deleteAllMovieKataloguesByKID(self, json):
+        dao = MovieKatalogueDao.MovieKatalogueDAO()
+        kid = json['KID']
+        dao.deleteAll(kid)
+        return jsonify(DeleteStatus = "OK"), 200
