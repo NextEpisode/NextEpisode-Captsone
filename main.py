@@ -21,12 +21,12 @@ def greeting():
 
 
 #User Area ------------------------------------------------------
-@app.route('/user', methods=['GET'])
+@app.route('/rBUWxJYlyR', methods=['GET'])
 def users():
     if request.method == 'GET':
             return UserHandler().getAllUsers() #Works
 
-@app.route('/user/opt', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route('/YJb5c9dNkT/opt', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def useropt():
     if request.method == 'GET':
             print("REQUEST: ", request.json)
@@ -50,13 +50,13 @@ def useropt():
 #Movie Area-----------------------------------------------------------------
 #Segment of Code for Routes regarding Movie or TV katalogues
 
-@app.route('/moviekatalogue', methods=['GET'])
+@app.route('/loiGET2r8Z', methods=['GET'])
 def mk():
     if request.method == 'GET':
             return MovieKatalogueHandler().getAllMovieKatalogues() #Works
 
 
-@app.route('/moviekatalogue/opt', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route('/JhvFJAEmLK/opt', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def mkopt():
     if request.method == 'GET':
             print("REQUEST: ", request.json)
@@ -75,7 +75,7 @@ def mkopt():
                     return MovieKatalogueHandler().deleteMovieKatalogue(request.json) #Works
                  
 #Search by Status. Try to put this with the rest later.
-@app.route('/moviekatalogue/stat', methods=['GET'])
+@app.route('/oGtFIapbXb/stat', methods=['GET'])
 def mkstat():
     if request.method == 'GET':
             print("REQUEST: ", request.json)
@@ -83,12 +83,12 @@ def mkstat():
 #Movie Area-----------------------------------------------------------------
 #TV Area--------------------------------------------------------------------
 
-@app.route('/tvkatalogue', methods=['GET'])
+@app.route('/Pn4yDzjDzy', methods=['GET'])
 def tv():
     if request.method == 'GET':
             return TVKatalogueHandler().getAllTVKatalogues() #Works
 
-@app.route('/tvkatalogue/opt', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@app.route('/zZPJMflCtI/opt', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def tvopt():
     if request.method == 'GET':
             print("REQUEST: ", request.json)
@@ -107,7 +107,7 @@ def tvopt():
                     return TVKatalogueHandler().deleteTVkatalogue(request.json) #Works
                  
     #Works. Put with the rest later.
-@app.route('/tvkatalogue/stat', methods=['GET'])
+@app.route('/f4doxSOsA7/stat', methods=['GET'])
 def tvkstat():
     if request.method == 'GET':
         print("REQUEST: ", request.json)
@@ -116,7 +116,7 @@ def tvkstat():
 #TV Area--------------------------------------------------------------------
 #Purge Area--------------------------------------------------------------------
 #Working on it
-@app.route('/purge', methods=['DELETE'])
+@app.route('/PSnDgAg2Mt', methods=['DELETE'])
 def purge():
     print("REQUEST: ", request.json)
     uid = request.json("UID")
@@ -131,14 +131,14 @@ def purge():
     
 
 #KID Purge
-@app.route('/moviekatalogue/prg', methods=['DELETE'])
+@app.route('/divAR9KhdT/prg', methods=['DELETE'])
 def mkprg():
     if request.method == 'DELETE':
             print("REQUEST: ", request.json)
             return MovieKatalogueHandler().deleteAllMovieKataloguesByKID(request.json) #Works
     
 #KID Purge
-@app.route('/tvkatalogue/prg', methods=['DELETE'])
+@app.route('/uafLzIOIdX/prg', methods=['DELETE'])
 def tvkprg():
     if request.method == 'DELETE':
             print("REQUEST: ", request.json)
